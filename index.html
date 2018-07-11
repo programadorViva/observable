@@ -15,8 +15,24 @@
         $(document).ready(function(){
             const input = $('input');
             let search = Rx.Observable.fromEvent(input,'keyup')
-            // .debouce(300);
-            console.log();
+            .debouce(300);
+            console.log(search);
+
+            let wikiResult = search.switchMap(function (e){
+                return $.ajax({
+                    type: "GET",
+                    url: "https://en.wikipedia.org/w/api.php?action=query&format=json&gsrlimit=15&generator=search&origin=*&gsrsearch=" + e.target.value,
+                    dataType: "json",
+                    sucess: function() {
+                        console.log(e.target.value)
+                    },
+                    error: function(errorMessage){
+
+                    }
+                })
+            });
+
+            wikiResult.subscribe(e =>console.log(e));
         })
     </script>
 </body>
